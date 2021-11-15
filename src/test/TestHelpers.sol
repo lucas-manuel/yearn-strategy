@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.6.11;
 
-import { DSTest } from "../lib/ds-test/src/test.sol";
+import { DSTest } from "../../lib/ds-test/src/test.sol";
 
-import { AddressRegistry } from "./AddressRegistry.sol";
-import { IERC20Like }      from "./Interfaces.sol";
+import { AddressRegistry } from "../AddressRegistry.sol";
+import { IERC20Like }      from "../interfaces/Interfaces.sol";
 
 interface Hevm {
 

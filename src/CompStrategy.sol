@@ -9,7 +9,8 @@ pragma experimental ABIEncoderV2;
 
 // Global Enums and Structs
 
-
+// Code taken from mainnet: https://etherscan.io/address/0x342491C093A640c7c2347c4FFA7D8b9cBC84D1EB#code
+// withdrawalQueue[1] at 0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE (yvUSDC)
 
 struct StrategyParams {
     uint256 performanceFee;

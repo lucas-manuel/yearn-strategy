@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.6.11;
 
-import { IERC20Like, IVaultLike } from "../Interfaces.sol";
+import { IERC20Like, IVaultLike } from "../interfaces/Interfaces.sol";
 
 contract Depositor {
 

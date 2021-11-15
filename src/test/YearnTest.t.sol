@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.6.11;
 
-import { Depositor } from "./accounts/Depositor.sol";
+import { Depositor }              from "../accounts/Depositor.sol";
+import { IERC20Like, IVaultLike } from "../interfaces/Interfaces.sol";
+import { Strategy }               from "../CompStrategy.sol";
 
-import { IERC20Like, IVaultLike } from "./Interfaces.sol";
-import { Strategy }               from "./CompStrategy.sol";
-import { TestHelpers }            from "./TestHelpers.sol";
+import { TestHelpers } from "./TestHelpers.sol";
 
 contract YearnTest is TestHelpers {
 
@@ -20,6 +20,8 @@ contract YearnTest is TestHelpers {
         vault     = IVaultLike(YV_USDC);
         usdc      = IERC20Like(USDC);
 
+        // Code taken from mainnet: https://etherscan.io/address/0x342491C093A640c7c2347c4FFA7D8b9cBC84D1EB#code
+        // withdrawalQueue[1] at 0xa354F35829Ae975e850e23e9615b11Da1B3dC4DE (yvUSDC)
         strategy = new Strategy(address(vault), CUSDC);
     }
 
