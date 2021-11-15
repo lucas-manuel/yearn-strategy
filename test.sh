@@ -30,8 +30,8 @@ export DAPP_TEST_ADDRESS=0xfeb4acf3df3cdea7399794d0869ef76a6efaff52
 
 if [ "$skip_build" = "1" ]; then export DAPP_SKIP_BUILD=1; fi
 
-if [ -z "$test" ]; then match="[contracts/test/*.t.sol]"; dapp_test_verbosity=2; else match=$test; dapp_test_verbosity=2; fi
+if [ -z "$test" ]; then match="[src/test/*.t.sol]"; dapp_test_verbosity=2; else match=$test; dapp_test_verbosity=2; fi
 
 echo LANG=C.UTF-8 dapp test --match "$match" --rpc-url "$ETH_RPC_URL" --verbosity $dapp_test_verbosity --fuzz-runs $runs
 
-LANG=C.UTF-8 dapp test --match "$match" --rpc-url "$ETH_RPC_URL" --verbosity $dapp_test_verbosity --fuzz-runs $runs #--cache cache/cts-cache
+LANG=C.UTF-8 dapp test --match "$match" --rpc-url "$ETH_RPC_URL" --verbosity $dapp_test_verbosity --fuzz-runs $runs --cache cache/yearn-cache

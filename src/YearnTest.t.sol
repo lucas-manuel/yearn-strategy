@@ -1,31 +1,57 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.6.11;
-pragma experimental ABIEncoderV2;
 
-import { DSTest } from "../lib/ds-test/src/test.sol";
+import { Depositor } from "./accounts/Depositor.sol";
 
-import { AddressRegistry } from "./AddressRegistry.sol";
-import { IVaultLike }      from "./Interfaces.sol";
-import { MapleStrategy }   from "./MapleStrategy.sol";
+import { IERC20Like, IVaultLike } from "./Interfaces.sol";
+import { Strategy }               from "./CompStrategy.sol";
+import { TestHelpers }            from "./TestHelpers.sol";
 
-contract YearnTest is DSTest, AddressRegistry {
+contract YearnTest is TestHelpers {
 
-    MapleStrategy strategy;
-    IVaultLike    vault;
+    Depositor  depositor;
+    Strategy   strategy;
+    IVaultLike vault;
+    IERC20Like usdc;
+
 
     function setUp() public {
-        strategy = new MapleStrategy();
-        vault    = IVaultLike(YV_USDC);
+        depositor = new Depositor();
+        vault     = IVaultLike(YV_USDC);
+        usdc      = IERC20Like(USDC);
+
+        strategy = new Strategy(address(vault), CUSDC);
     }
 
-    function test_totalSupply() public {
-        address usdc = strategy.want();
-        address vault2 = strategy.vault();
-        emit log_named_address("usdc", usdc);
-        emit log_named_address("vault2", vault2);
-        emit log_named_address("address(this)", address(this));
+    function test_strategy() public {
         vault.updateStrategyDebtRatio(COMP_STRATEGY, 0);
-        vault.addStrategy(address(strategy), 10_000, 0, type(uint256).max - 1, 1000);
-        
+        vault.addStrategy(address(strategy), 9500, 0, type(uint256).max - 1, 1000);
+
+        uint256 VAULT_BAL = 2_068_909_364345;  // yvUSDC starting USDC balance
+
+        erc20_mint(USDC, address(depositor), 1_000_000 * USD);
+
+        assertEq(usdc.balanceOf(address(depositor)), 1_000_000 * USD);
+        assertEq(usdc.balanceOf(address(vault)),     VAULT_BAL);
+        assertEq(usdc.balanceOf(address(strategy)),  0);
+
+        assertEq(vault.balanceOf(address(depositor)), 0);
+
+        depositor.approve(address(usdc),  address(vault),  1_000_000 * USD);
+        depositor.deposit(address(vault), 1_000_000 * USD, address(depositor));
+
+        assertEq(usdc.balanceOf(address(depositor)), 0);
+        assertEq(usdc.balanceOf(address(vault)),     VAULT_BAL + 1_000_000 * USD);
+        assertEq(usdc.balanceOf(address(strategy)),  0);
+
+        assertEq(vault.balanceOf(address(depositor)), 1_000_000 * USD);
+
+        strategy.harvest();
+
+        assertEq(usdc.balanceOf(address(depositor)), 0);
+        assertEq(usdc.balanceOf(address(vault)),     VAULT_BAL + 1_000_000 * USD);
+        assertEq(usdc.balanceOf(address(strategy)),  0);
+
+        assertEq(vault.balanceOf(address(depositor)), 1_000_000 * USD);
     }
 }
