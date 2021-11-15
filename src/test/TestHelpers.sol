@@ -14,6 +14,12 @@ interface Hevm {
     // Sets slot `loc` of contract `c` to value `val`
     function store(address c, bytes32 loc, bytes32 val) external view;
 
+    // Sets the block number
+    function roll(uint256 x) external;
+
+    // Reads the slot `loc` of contract `c`
+    function load(address c, bytes32 loc) external view returns (bytes32 val);
+
 }
 
 contract TestHelpers is AddressRegistry, DSTest {

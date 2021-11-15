@@ -23,6 +23,26 @@ interface IERC20Like {
 
 }
 
+interface ILoanLike {
+
+    function getNextPayment() external view returns (uint256 total, uint256 principal, uint256 interest, bool isLate);
+
+    function makePayment() external; 
+
+    function nextPaymentDue() external view returns (uint256 nextPaymentDue_);
+
+    function paymentsRemaining() external view returns (uint256 paymentsRemaining_);
+
+}
+
+interface IPoolLike is IERC20Like {
+
+    function claim(address, address) external returns (uint256[7] memory);
+
+    function deposit(uint256 amount) external;
+
+}
+
 interface IVaultLike is IERC20Like {
 
     function addStrategy(
@@ -34,6 +54,10 @@ interface IVaultLike is IERC20Like {
     ) external;
 
     function deposit(uint256 amount, address account) external;
+
+    function governance() external view returns (address);
+
+    function totalAssets() external view returns (uint256);
 
     function updateStrategyDebtRatio(address strategy, uint256 debtRatio) external;
 
