@@ -85,7 +85,7 @@ contract YearnTest is TestHelpers {
 
         hevm.warp(block.timestamp + 150 seconds);
 
-        _logState("Pre-Harvest");
+        _logState("Pre-Harvest 1");
 
         strategy.harvest();
 
@@ -97,13 +97,15 @@ contract YearnTest is TestHelpers {
         assertEq(vault.totalAssets(),                 VAULT_TOTAL_ASSETS + depositAmount);
         assertEq(pool.balanceOf(address(strategy)),   totalVaultBalance * 1e12);  // Convert to WAD
 
-        _logState("Post-Harvest");
+        _logState("Post-Harvest 1 + Pre-Pool Earning");
 
         _makeAllPaymentsAndClaims();
 
+        _logState("Post-Pool Earning + Pre-Harvest 2");
+
         strategy.harvest();
 
-        _logState("Post-Harvest");
+        _logState("Post-Harvest 2");
     }
 
     function _makeAllPaymentsAndClaims() internal {
@@ -138,26 +140,5 @@ contract YearnTest is TestHelpers {
         emit log_named_uint("Pool-LP Strategy Balance ", pool.balanceOf(address(strategy)) / 1e12);  // Convert from 1e18
         emit log(" ");
     }
-
-    // function test_cheat_code_for_slot() public {
-
-    //     uint256 i = 0;
-
-    //     while(vault.governance() != address(this) && i < 100) {
-    //         hevm.store(
-    //             YV_USDC,
-    //             bytes32(uint256(i)), // Mint tokens
-    //             bytes32(uint256(address(this)))
-    //         );
-    //         if(vault.governance() == address(this)) {
-    //             emit log_named_uint("slot", i);
-    //         }
-    //         // bytes32 val = hevm.load(YV_USDC, bytes32(uint256(i)));
-    //         // emit log_named_uint("i", i);
-    //         // emit log_named_bytes32("val", val);
-    //         i += 1;
-    //     }
-    //     assertTrue(false);
-    // }
 
 }
